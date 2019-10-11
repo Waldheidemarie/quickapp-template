@@ -1,0 +1,17 @@
+<script>
+/**
+ * @desc: 应用级别的配置、方法，供所有页面公用；
+ */
+import { $utils, $apis } from './helper'
+
+/* @desc: 注入方法至全局 global,以便页面调用 */
+const hook2global = global.__proto__ || global
+hook2global.$apis = $apis
+hook2global.$utils = $utils
+hook2global.$shelfList = []
+
+export default {
+  $apis: $apis,
+  $shelfList: hook2global.$shelfList
+}
+</script>

@@ -1,0 +1,77 @@
+{
+  "package": "com.example.demo",
+  "name": "quickapp",
+  "versionName": "1.0.0",
+  "versionCode": "1",
+  "minPlatformVersion": "1020",
+  "icon": "/assets/logo.png",
+  "features": [
+    {
+      "name": "system.prompt"
+    },
+    {
+      "name": "system.router"
+    },
+    {
+      "name": "system.shortcut"
+    },
+    {
+      "name": "system.webview"
+    },
+    {
+      "name": "service.share"
+    },
+    {
+      "name": "system.fetch"
+    },
+    {
+      "name": "system.storage"
+    }
+  ],
+  "permissions": [
+    {
+      "origin": "*"
+    }
+  ],
+  "config": {
+    "logLevel": "debug",
+    "designWidth": 800
+  },
+  "router": {
+    "entry": "pages/main",
+    "pages": {
+      "pages/main": {
+        "component": "index"
+      },
+      "pages/search-result": {
+        "component": "index"
+      },
+      "pages/video-home": {
+        "component": "index"
+      },
+      "pages/user-center": {
+        "component": "index"
+      }
+    }
+  },
+  "display": {
+    "titleBar": true,
+    "titleBarBackgroundColor": "#f4f6fa",
+    "titleBarTextColor": "#333333",
+    "menu": true,
+    "pages": {
+      "pages/main": {
+        "titleBarText": "首页"
+      },
+      "pages/search-result": {
+        "titleBarText": "搜索结果"
+      },
+      "pages/video-home": {
+        "titleBarText": "直播"
+      },
+      "pages/user-center": {
+        "titleBarText": "用户中心"
+      }
+    }
+  }
+}

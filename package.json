@@ -1,0 +1,59 @@
+{
+  "name": "quickapp",
+  "version": "1.0.0",
+  "description": "快应用图书模版",
+  "scripts": {
+    "start": "hap server --watch",
+    "launch": "concurrently \"node ./command/server.js\" \"npm run watch\"",
+    "server": "hap server",
+    "gen": "node ./command/gen/index.js",
+    "build": "hap build",
+    "release": "hap release",
+    "watch": "hap watch",
+    "debug": "hap debug",
+    "precommit-msg": "echo '🚧 start pre-commit checks...' && exit 0",
+    "prettier": "prettier --write \"src/**/*.{js,ux,less,scss,css}\"",
+    "prettier-watch": "onchange '**/*.md' \"src/**/**/*.{js,ux,less,scss,css}\" -- prettier --write {{changed}}"
+  },
+  "devDependencies": {
+    "@types/quickapp": "git+https://github.com/vivoquickapp/quickapp-types.git",
+    "address": "^1.0.3",
+    "babel-eslint": "^10.0.2",
+    "concurrently": "^4.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-hybrid": "0.0.5",
+    "hap-toolkit": "latest",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "lint-staged": "^8.1.0",
+    "onchange": "^5.2.0",
+    "opn": "^5.4.0",
+    "portfinder": "^1.0.20",
+    "prettier": "^1.15.3",
+    "prettier-plugin-quickapp": "^0.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run precommit-msg && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/**.{ux,js,json,pcss,md,vue,less,scss}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "printWidth": 110,
+    "proseWrap": "never"
+  },
+  "keywords": [
+    "快应用",
+    "刷宝"
+  ],
+  "dependencies": {
+    "apex-ui": "latest"
+  }
+}

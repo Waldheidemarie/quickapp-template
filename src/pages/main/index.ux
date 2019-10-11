@@ -1,0 +1,94 @@
+<import name="video-home" src="../video-home"></import>
+<import name="user-center" src="../user-center"></import>
+
+<template>
+  <div class="page-wrapper">
+    <tabs index="{{selectedTab}}" onchange="changeTab">
+      <tab-content>
+        <video-home shelf-list="{{shelfList}}" onupdate-shelf="updateShelf"></video-home>
+        <user-center></user-center>
+      </tab-content>
+      <tab-bar mode="fixed" class="tab-bar">
+        <div class="tab-item" for="tabList">
+          <text class="iconfont">{{ selectedTab === $idx ? $item.activatedIcon : $item.icon }}</text>
+          <text class="tab-title">{{ $item.title }}</text>
+        </div>
+      </tab-bar>
+    </tabs>
+  </div>
+</template>
+
+<script>
+import { bookListData } from '../../assets/data/book-list.js'
+export default {
+  private: {
+    tabList: [
+      {
+        title: '视频',
+        icon: '\ue602',
+        activatedIcon: '\ue601'
+      },
+      {
+        title: '我的',
+        icon: '\ue603',
+        activatedIcon: '\ue604'
+      }
+    ],
+    selectedTab: 1,
+    defaultShelfList: bookListData.slice(0, 2),
+    shelfList: []
+  },
+  onInit() {
+    $utils.getStorage('bookshelf').then(value => {
+      // 从storage获取
+      if (!value) {
+        this.shelfList = this.defaultShelfList
+        $utils.setShelfList(this.shelfList, true) // 保存到全局变量和storage
+      } else {
+        this.shelfList = JSON.parse(value)
+        $utils.setShelfList(this.shelfList) // 保存到全局变量
+      }
+    })
+  },
+  /* -------------------SelfCustomEvent------------------ */
+  changeTab(e) {
+    let index = e.index === undefined ? 1 : e.index
+    this.selectedTab = index
+    if (this.selectedTab === 0) {
+      this.shelfList = $shelfList // 获取全局变量，不需要每次到storage获取
+    }
+  },
+  updateShelf(param) {
+    this.shelfList = param.detail.shelfList
+    $utils.setShelfList(this.shelfList, true) // 保存到全局变量和storage
+  }
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/index.less';
+.tab-bar {
+  background-color: @white;
+  .border-top-mixins();
+  padding: 15px 0;
+  height: 110px;
+  .tab-item {
+    flex: 1;
+    .flex-box-mixins(column, center, center);
+    .iconfont {
+      font-size: 50px;
+      color: @text-grey;
+      &:active {
+        color: @brand;
+      }
+    }
+    .tab-title {
+      font-size: 20px;
+      color: @text-grey;
+      &:active {
+        color: @brand;
+      }
+    }
+  }
+}
+</style>

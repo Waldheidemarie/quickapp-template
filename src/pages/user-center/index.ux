@@ -1,0 +1,85 @@
+<import name="search-input-bar" src="../../components/search-input-bar"></import>
+<template>
+  <div class="page-column">
+    <search-input-bar onsearch="search"></search-input-bar>
+    <div class="search-hot">
+      <div class="search-title">
+        <text class="text-black">大家都在搜</text>
+        <text class="search-refresh" @click="refreshHostList">&#xe607;</text>
+      </div>
+      <div class="hot-list">
+        <text class="hot-item" for="hotList" @click="toSearch($item.title)">{{ $item.title }}</text>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { bookListData } from '../../assets/data/book-list.js'
+export default {
+  props: [],
+  data: {
+    hotList: [],
+    page: 1
+  },
+  onReady() {
+    this.refreshHostList()
+  },
+  /* -------------------SelfCustomEvent------------------ */
+  changeTab(e) {
+    let index = e.index || 0
+    this.selectedTab = this.tabList[index]
+  },
+  search(info) {
+    let searchText = info.detail
+    this.toSearch(searchText)
+  },
+  toSearch(text) {
+    $utils.route2theUrl('pages/search-result', { initValue: text })
+  },
+  refreshHostList() {
+    if (this.page === 1) {
+      this.hotList = bookListData.slice(5, 10)
+      this.page = 2
+    } else if (this.page === 2) {
+      this.hotList = bookListData.slice(10, 13)
+      this.page = 1
+    }
+  }
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/index.less';
+
+.search-hot {
+  background-color: @white;
+  width: 100%;
+  padding: @gap-4;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  .flex-box-mixins(column, flex-start, flex-start);
+  .search-title {
+    width: 100%;
+    margin-bottom: @gap-4;
+    .flex-box-mixins(row, space-between, center);
+  }
+  .hot-list {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .hot-item {
+    width: 200px;
+    padding: @gap-1 0;
+    text-align: center;
+    border: 1px solid @grey;
+    border-radius: 30px;
+    margin: 15px @gap-4 15px 0;
+  }
+}
+.search-refresh {
+  .text-primary;
+  .iconfont;
+  padding: 0 @gap-3;
+}
+</style>

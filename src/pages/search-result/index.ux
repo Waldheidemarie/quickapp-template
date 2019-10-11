@@ -1,0 +1,93 @@
+<import name="search-input-bar" src="../../components/search-input-bar"></import>
+
+<template>
+  <div class="page-wrapper">
+    <search-input-bar onsearch="search" init-value="{{initValue}}"></search-input-bar>
+    <list class="list-container" if="{{searchText}}">
+      <list-item type="title">
+        <text class="list-title">搜到{{ resultList.length }}条结果</text>
+      </list-item>
+      <list-item class="book-item" for="{{resultList}}" onclick="goToDetail($item)" type="book-item">
+        <div class="list-image">
+          <image src="{{$item.image}}"></image>
+        </div>
+        <div class="list-text">
+          <text class="book-title text-black">{{ $item.title }}</text>
+          <text class="book-author text-remark">{{ $item.author }}</text>
+          <text class="book-description text-remark-black">{{ $item.description }}</text>
+        </div>
+      </list-item>
+    </list>
+  </div>
+</template>
+
+<script>
+import { bookListData } from '../../assets/data/book-list.js'
+export default {
+  protected: {
+    initValue: ''
+  },
+  private: {
+    resultList: [],
+    searchText: ''
+  },
+  onReady() {
+    this.searchText = this.initValue
+    this.queryFn()
+  },
+  /* -------------------SelfCustomEvent------------------ */
+  search(info) {
+    this.searchText = info.detail
+    this.queryFn()
+  },
+  queryFn() {
+    // 根据关键字，查询接口，返回resultList。此处模拟接口查询，只能查询到bookListData中的图书。
+    this.resultList = this.searchText
+      ? bookListData.filter(item => {
+          return item.title.indexOf(this.searchText) !== -1
+        })
+      : []
+  },
+  goToDetail(item) {
+    // 根据id查询详情
+    console.log(item.id)
+    $utils.route2theUrl('pages/book-detail', { info: item })
+  }
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/index.less';
+.book-item {
+  height: 300px;
+  width: 100%;
+  padding: @gap-3 0;
+  .flex-box-mixins(row, space-between, flex-start);
+  .list-text {
+    flex: 1;
+    height: 100%;
+    .flex-box-mixins(column, center, flex-start);
+    .book-title {
+      lines: 1;
+    }
+    .book-description {
+      lines: 2;
+    }
+    text {
+      margin-bottom: @gap-2;
+    }
+  }
+  .list-image {
+    width: 180px;
+    height: 240px;
+    margin-right: @gap-3;
+    background-color: @white-grey;
+    border-radius: 8px;
+    image {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+    }
+  }
+}
+</style>

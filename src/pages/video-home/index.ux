@@ -1,0 +1,117 @@
+<template>
+  <div class="page-column">
+    <div class="title-bar" show="{{!editStatus}}">
+      <text class="text-black">共收藏{{ shelfList.length }}本</text>
+      <div @click="switchToEdit" if="{{ shelfList.length }}">
+        <text class="text-primary iconfont">&#xe641;</text>
+        <text class="text-primary">编辑</text>
+      </div>
+    </div>
+    <div class="title-bar" show="{{editStatus}}">
+      <text class="text-black">已删除{{ deleteList.length }}本</text>
+      <div>
+        <text class="text-cancel" @click="cancelEdit">取消</text>
+        <text class="text-primary" @click="finishEdit">完成</text>
+      </div>
+    </div>
+    <div class="bookshelf-list">
+      <div class="bookshelf-item" for="{{shelfList}}" show="{{deleteList.indexOf($item.id)===-1}}">
+        <stack class="bookshelf-img">
+          <div class="img-container">
+            <image src="{{$item.image}}" @click="clickImg($item)"></image>
+          </div>
+          <div class="delete-icon" @click="deleteBook($item)">
+            <image src="../../assets/images/cancel.png" show="{{editStatus}}"></image>
+          </div>
+        </stack>
+        <text class="bookshelf-title">{{ $item.title }}</text>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ['shelfList'],
+  data: {
+    img: '/assets/images/pic_1.jpg',
+    editStatus: false,
+    deleteList: []
+  },
+  onInit() {},
+  /* -------------------SelfCustomEvent------------------ */
+  clickImg(item) {
+    if (!this.editStatus) {
+      this.gotoBookContent(item)
+    } else {
+      this.deleteBook(item)
+    }
+  },
+  gotoBookContent(item) {
+    $utils.route2theUrl('pages/book-content', { bookId: item.id, bookTitle: item.title })
+  },
+  deleteBook(item) {
+    this.deleteList.push(item.id)
+  },
+  switchToEdit() {
+    this.editStatus = true
+  },
+  finishEdit() {
+    let shelfList = this.shelfList.filter(book => {
+      return this.deleteList.indexOf(book.id) === -1
+    })
+    this.$emit('updateShelf', { shelfList })
+    this.editStatus = false
+    this.deleteList = []
+  },
+  cancelEdit() {
+    this.editStatus = false
+    this.deleteList = []
+  }
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/index.less';
+
+.text-cancel {
+  color: @text-grey;
+  margin-right: @gap-4;
+}
+.bookshelf-list {
+  width: 100%;
+  padding: 20px;
+  flex-wrap: wrap;
+  .flex-box-mixins(row, flex-start, flex-start);
+  .bookshelf-item {
+    width: 28%;
+    margin: 20px;
+    .flex-box-mixins(column, flex-start, flex-start);
+    .bookshelf-title {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  .bookshelf-img {
+    width: 100%;
+    height: 270px;
+    .flex-box-mixins(row, flex-end, flex-end);
+    .img-container {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+    }
+    .delete-icon {
+      width: 60px;
+      height: 60px;
+      padding: @gap-1;
+    }
+    image {
+      border-radius: 5px;
+      width: 100%;
+      height: 100%;
+      flex: 1;
+    }
+  }
+}
+</style>

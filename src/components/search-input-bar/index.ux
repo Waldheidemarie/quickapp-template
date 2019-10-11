@@ -1,0 +1,47 @@
+<template>
+  <div class="title-bar-noline">
+    <div class="search">
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="请输入书名或作者"
+        value="{{searchText}}"
+        onchange="change"
+        onenterkeyclick="search"
+      />
+      <text class="iconfont search-icon" onclick="search()">&#xe661;</text>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    initValue: {
+      default: ''
+    }
+  },
+  data: {
+    searchText: ''
+  },
+  onReady() {
+    this.searchText = this.initValue
+  },
+  /* -------------------SelfCustomEvent------------------ */
+  change(e) {
+    this.searchText = e.value
+  },
+  search() {
+    if (!this.searchText) {
+      $utils.showToast('输入不能为空')
+      return
+    }
+    this.$emit('search', this.searchText)
+  }
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/index.less';
+</style>
